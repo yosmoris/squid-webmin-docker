@@ -1,0 +1,25 @@
+services:
+  # 1. プロキシサーバー (Squid + Webmin)
+  squid-webmin:
+    build: .
+    container_name: squid-main
+    ports:
+      - "3128:3128" # Proxyポート
+      - "10000:10000" # Webminポート
+    environment:
+      - ROOT_PASSWORD=password
+    volumes:
+      # Squidの設定を永続化したい場合はコメントアウトを外す
+      # - ./squid-data:/etc/squid
+      - ./logs:/var/log/squid
+    restart: always
+
+  # 2. PACファイル配布用サーバー (Nginx)
+  pac-server:
+    image: nginx:alpine
+    container_name: pac-server
+    ports:
+      - "80:80" # WPAD/PAC配布用
+    volumes:
+      - ./html:/usr/share/nginx/html
+    restart: always
