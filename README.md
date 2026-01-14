@@ -17,7 +17,53 @@ GUI 管理ツール（Webmin）と、PAC ファイル配布サーバー（Nginx�
 | **squid-main** | Ubuntu 24.04   | **Squid Proxy**: プロキシ本体<br>**Webmin**: GUI 管理・ログ閲覧 | 3128 (Proxy)<br>10000 (GUI) |
 | **pac-server** | Nginx (Alpine) | **Web Server**: `proxy.pac` ファイルの配布                      | 80                          |
 
-## 3. クイックスタート（推奨）
+## 3. Windows ユーザー向けセットアップ
+
+Docker がインストールされていない Windows 環境では、**Rancher Desktop**（無料）を使用してください。
+
+> [!NOTE]
+> Docker Desktop は大企業向けに有償化されています（従業員250人以上または年間売上$10M以上）。  
+> Rancher Desktop は完全無料（Apache 2.0 ライセンス）で、同等の機能を提供します。
+
+### インストール手順
+
+1. **Rancher Desktop をダウンロード**  
+   https://rancherdesktop.io/ から Windows 版をダウンロード
+
+2. **インストーラーを実行**（管理者権限が必要）
+
+3. **初回起動時の設定**  
+   - **Container Engine**: `dockerd (moby)` を選択  
+     ※ これにより `docker` コマンドがそのまま使用可能になります
+   - **Kubernetes**: 不要な場合は無効化して軽量化できます
+
+4. **ターミナル（PowerShell / Git Bash 等）を開いて動作確認**
+   ```powershell
+   docker --version
+   ```
+
+インストール完了後、以下のクイックスタートに進んでください。
+
+### Mac ユーザー向けセットアップ
+
+Mac 環境でも **Rancher Desktop**（無料）を使用できます。
+
+#### Homebrew でインストール（推奨）
+
+```bash
+brew install --cask rancher
+
+# インストール後、アプリケーションから Rancher Desktop を起動
+```
+
+#### 手動インストール
+
+1. https://rancherdesktop.io/ から macOS 版（Intel / Apple Silicon）をダウンロード
+2. `.dmg` を開き、アプリケーションフォルダにドラッグ
+3. 初回起動時に **Container Engine** で `dockerd (moby)` を選択
+4. ターミナルで `docker --version` を実行して動作確認
+
+## 4. クイックスタート（推奨）
 
 ビルド済みイメージを使用するため、**ビルド不要**で即起動できます。
 
@@ -43,7 +89,7 @@ curl -sL https://raw.githubusercontent.com/yosmoris/squid-webmin-docker/main/htm
 docker compose up -d
 ```
 
-## 4. アクセス情報
+## 5. アクセス情報
 
 | サービス     | URL / 設定                                               |
 | :----------- | :------------------------------------------------------- |
@@ -52,7 +98,7 @@ docker compose up -d
 | Webmin 認証  | ユーザー: `root` / パスワード: `password`                |
 | PAC URL      | [http://localhost/proxy.pac](http://localhost/proxy.pac) |
 
-## 5. 使い方
+## 6. 使い方
 
 ### A. プロキシサーバーへの接続
 
@@ -88,7 +134,7 @@ docker compose down
 docker compose down -v
 ```
 
-## 6. Webmin での設定例
+## 7. Webmin での設定例
 
 ### 特定ドメインのブロック
 
@@ -114,7 +160,7 @@ delay_access 1 allow all
 delay_parameters 1 51200/51200
 ```
 
-## 7. 開発者向け（ローカルビルド）
+## 8. 開発者向け（ローカルビルド）
 
 Dockerfile を修正してテストする場合は、開発者用の compose ファイルを使用してください。
 
@@ -126,7 +172,7 @@ wget http://prdownloads.sourceforge.net/webadmin/webmin_2.111_all.deb -O webmin.
 docker compose -f docker-compose.dev.yml up -d --build
 ```
 
-## 8. ディレクトリ構成
+## 9. ディレクトリ構成
 
 ```text
 .
@@ -141,7 +187,7 @@ docker compose -f docker-compose.dev.yml up -d --build
         └── docker-publish.yml  # 自動ビルド・公開ワークフロー
 ```
 
-## 9. 注意事項・トラブルシューティング
+## 10. 注意事項・トラブルシューティング
 
 ### VPN 環境での利用
 
@@ -157,6 +203,6 @@ docker compose -f docker-compose.dev.yml up -d --build
 
 > ⚠️ **警告**: 本環境は検証用として `http_access allow all`（全許可）および SSL 無効化を行っています。**インターネットに公開されているサーバーには絶対にデプロイしないでください。**
 
-## 10. ライセンス
+## 11. ライセンス
 
 MIT License
