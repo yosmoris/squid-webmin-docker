@@ -1,2 +1,20 @@
+# ローカルのみ
 webmin.deb
 *.pptx
+
+# ログファイル
+logs/
+*.log
+
+# 一時ファイル
+*.tmp
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# 環境固有
+.env
+.env.local
+EOF
