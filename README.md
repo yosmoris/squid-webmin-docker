@@ -19,11 +19,7 @@ GUI 管理ツール（Webmin）と、PAC ファイル配布サーバー（Nginx�
 
 ## 3. Windows ユーザー向けセットアップ
 
-Docker がインストールされていない Windows 環境では、**Rancher Desktop**（無料）を使用してください。
-
-> [!NOTE]
-> Docker Desktop は大企業向けに有償化されています（従業員250人以上または年間売上$10M以上）。  
-> Rancher Desktop は完全無料（Apache 2.0 ライセンス）で、同等の機能を提供します。
+Docker がインストールされていない Windows 環境では、**Rancher Desktop**を使用してください。
 
 ### インストール手順
 
@@ -35,7 +31,7 @@ Docker がインストールされていない Windows 環境では、**Rancher 
 3. **初回起動時の設定**  
    - **Container Engine**: `dockerd (moby)` を選択  
      ※ これにより `docker` コマンドがそのまま使用可能になります
-   - **Kubernetes**: 不要な場合は無効化して軽量化できます
+   - **Kubernetes**: 不要なので無効化します
 
 4. **ターミナル（PowerShell / Git Bash 等）を開いて動作確認**
    ```powershell
@@ -46,7 +42,7 @@ Docker がインストールされていない Windows 環境では、**Rancher 
 
 ### Mac ユーザー向けセットアップ
 
-Mac 環境でも **Rancher Desktop**（無料）を使用できます。
+Mac 環境でも **Rancher Desktop**を使用できます。
 
 #### Homebrew でインストール（推奨）
 
