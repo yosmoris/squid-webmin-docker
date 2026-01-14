@@ -1,0 +1,68 @@
+name: Build and Publish Docker Image
+
+# いつ実行するか
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch: # 手動実行ボタンを有効化
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # 1. リポジトリのコードを取得
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Webminパッケージをダウンロード
+      - name: Download Webmin package
+        run: |
+          echo "Downloading Webmin..."
+          wget -q --timeout=60 --tries=3 \
+            "http://prdownloads.sourceforge.net/webadmin/webmin_2.111_all.deb" \
+            -O webmin.deb
+          ls -la webmin.deb
+
+      # 3. Docker Buildxをセットアップ
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 4. GitHub Container Registryにログイン
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 5. イメージのタグとラベルを生成
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}}
+            type=sha,prefix=
+
+      # 6. Dockerイメージをビルドしてプッシュ
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
