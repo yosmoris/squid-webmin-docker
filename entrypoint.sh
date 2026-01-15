@@ -14,6 +14,19 @@ fi
 echo "Starting Webmin..."
 /etc/init.d/webmin start || echo "Webmin start failed, but continuing..."
 
+# Webminの起動完了を待機（ポート10000がリッスン状態になるまで）
+echo "Waiting for Webmin to be ready..."
+for i in $(seq 1 30); do
+    if ss -tlnp 2>/dev/null | grep -q ':10000'; then
+        echo "Webmin is ready!"
+        break
+    fi
+    if [ "$i" -eq 30 ]; then
+        echo "Warning: Webmin may not have started properly (timeout after 30s)"
+    fi
+    sleep 1
+done
+
 # --- Squid設定 ---
 SQUID_CONF="/etc/squid/squid.conf"
 CACHE_DIR="/var/spool/squid"
